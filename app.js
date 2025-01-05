@@ -13,17 +13,18 @@ dotenv.config();
 
 const app = express();
 
-
-app.use(cors()); // Add this line
-
-// Middleware
+// Define allowed origins for CORS
 const allowedOrigins = ['https://real-estate-mernstack.netlify.app'];
 
-app.use(cors({
-  origin: allowedOrigins, // Allow only your frontend domain
-  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
-  credentials: true, // Allow cookies and credentials if needed
-}));
+app.use(
+  cors({
+    origin: allowedOrigins, // Allow only frontend domain
+    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
+    credentials: true, // Allow credentials such as cookies
+  })
+);
+
+// Middleware for parsing JSON and cookies
 app.use(express.json());
 app.use(cookieParser());
 
@@ -37,17 +38,20 @@ app.use("/api/messages", messageRoute);
 
 // Health Check Endpoint
 app.get("/", (req, res) => {
-    res.send("API is running...");
+  res.send("API is running...");
 });
 
 // Error Handling Middleware
 app.use((err, req, res, next) => {
-    const status = err.status || 500;
-    res.status(status).json({ message: err.message });
+  const status = err.status || 500;
+  res.status(status).json({
+    success: false,
+    message: err.message || "Internal Server Error",
+  });
 });
 
 // Server Listener
 const PORT = process.env.PORT || 8800;
 app.listen(PORT, () => {
-    console.log(`Server started at port ${PORT}`);
+  console.log(`Server started at port ${PORT}`);
 });
