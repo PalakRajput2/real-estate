@@ -13,11 +13,17 @@ dotenv.config();
 
 const app = express();
 
+
+const cors = require('cors');
+app.use(cors()); // Add this line
+
 // Middleware
-app.use(cors({ 
-    origin: process.env.CLIENT_URL, 
-    credentials: true, 
-    methods: ['GET', 'POST', 'PUT', 'DELETE']
+const allowedOrigins = ['https://real-estate-mernstack.netlify.app'];
+
+app.use(cors({
+  origin: allowedOrigins, // Allow only your frontend domain
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
+  credentials: true, // Allow cookies and credentials if needed
 }));
 app.use(express.json());
 app.use(cookieParser());
